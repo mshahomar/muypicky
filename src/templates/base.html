@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}MuyPicky{% endblock %}</title>
+    {% include 'snippets/css.html' %}
+</head>
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+    {% include 'snippets/nav.html' %}
+
+    <!-- Jumbotron -->
+    <div class="jumbotron text-center">
+        <h1>MuyPicky</h1>
+        <p>Share your pickiness with your friends.</p>
+        <p>Add the restaurants add menu items like most
+            so they get it right every time.</p>
+    </div>
+
+    <div class="container">
+        {% block content%}
+            <!-- About -->
+            <!-- Contact -->
+        {% endblock %}
+    </div>
+
+    {% include 'snippets/js.html' %}
+</body>
+</html>
