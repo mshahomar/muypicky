@@ -13,21 +13,25 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth.views import (LoginView, LogoutView,
+                                       PasswordResetView)
 
 # from restaurants.views import home, about, contact,
 # from restaurants.views import restaurant_listview
 from restaurants.views import HomeView, AboutView, ContactView, restaurant_createview
-from restaurants.views import (RestaurantListView,
-                               # SearchRestaurantListView,
-                               MalaysianListView,
-                               RestaurantDetailView,
-                               RestaurantCreateView)
+# from restaurants.views import (RestaurantListView,
+#                                # SearchRestaurantListView,
+#                                MalaysianListView,
+#                                RestaurantDetailView,
+#                                RestaurantCreateView)
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^restaurants/', include('restaurants.urls', namespace='restaurants')),
+    url(r'^menus/', include('menus.urls', namespace='menus')),
     # url(r'^$', home, name='home'),
     # url(r'^about/$', about, name='about'),
     # url(r'^contact/$', contact, name='contact'),
@@ -35,15 +39,17 @@ urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^about/$', AboutView.as_view(), name='about'),
     url(r'^contact/$', ContactView.as_view(), name='contact'),
-    # url(r'^restaurants/$', restaurant_listview, name='restaurants_list'),
-    url(r'^restaurants/$', RestaurantListView.as_view(), name='restaurants_list'),
-    url(r'^restaurants/create/$', RestaurantCreateView.as_view(), name='create'),
-    # url(r'^restaurants/create/$', restaurant_createview, name='create'),
-    # url(r'^restaurants/(?P<slug>\w+)/$', RestaurantListView.as_view()),
-    # url(r'^restaurants/(?P<slug>\w+)/$', SearchRestaurantListView.as_view()),
-    url(r'^restaurants/malaysian/$', MalaysianListView.as_view(), name='malaysian_list'),
-    # url(r'^restaurants/(?P<pk>\d+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
-    # url(r'^restaurants/(?P<rest_id>\d+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
-    url(r'^restaurants/(?P<slug>[\w-]+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
-
+    url(r'^login/$', LoginView.as_view(), name='login'),
+    url(r'^logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^password-reset/$', PasswordResetView.as_view(), name='reset'),
+    # # url(r'^restaurants/$', restaurant_listview, name='restaurants_list'),
+    # url(r'^restaurants/$', RestaurantListView.as_view(), name='restaurants_list'),
+    # url(r'^restaurants/create/$', RestaurantCreateView.as_view(), name='create'),
+    # # url(r'^restaurants/create/$', restaurant_createview, name='create'),
+    # # url(r'^restaurants/(?P<slug>\w+)/$', RestaurantListView.as_view()),
+    # # url(r'^restaurants/(?P<slug>\w+)/$', SearchRestaurantListView.as_view()),
+    # url(r'^restaurants/malaysian/$', MalaysianListView.as_view(), name='malaysian_list'),
+    # # url(r'^restaurants/(?P<pk>\d+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
+    # # url(r'^restaurants/(?P<rest_id>\d+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
+    # url(r'^restaurants/(?P<slug>[\w-]+)/$', RestaurantDetailView.as_view(), name='restaurants_detail'),
 ]

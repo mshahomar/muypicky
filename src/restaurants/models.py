@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 
@@ -24,6 +25,9 @@ class RestaurantLocation(models.Model):
     @property
     def title(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("restaurants:restaurants_detail", kwargs={'slug': self.slug})
 
 
 def rl_pre_save_receiver(sender, instance, *args, **kwargs):

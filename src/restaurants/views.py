@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
@@ -98,7 +100,7 @@ class ContactView(TemplateView):
 
 
 class RestaurantListView(ListView):
-    # queryset = RestaurantLocation.objects.all()
+    queryset = RestaurantLocation.objects.all()
     template_name = 'restaurants/restaurants_list.html'
 
     # def get_context_data(self, **kwargs):
@@ -107,18 +109,18 @@ class RestaurantListView(ListView):
     #     print(context)
     #     return context
 
-    def get_queryset(self):
-        print(self.kwargs)
-        slug = self.kwargs.get("slug")
-        if slug:
-            queryset = RestaurantLocation.objects.filter(
-                Q(category__iexact=slug) |
-                Q(category__icontains=slug)
-            )
-        else:
-            queryset = RestaurantLocation.objects.all()
-
-        return queryset
+    # def get_queryset(self):
+    #     print(self.kwargs)
+    #     slug = self.kwargs.get("slug")
+    #     if slug:
+    #         queryset = RestaurantLocation.objects.filter(
+    #             Q(category__iexact=slug) |
+    #             Q(category__icontains=slug)
+    #         )
+    #     else:
+    #         queryset = RestaurantLocation.objects.all()
+    #
+    #     return queryset
 
 
 class MalaysianListView(ListView):
@@ -150,9 +152,9 @@ class RestaurantDetailView(DetailView):
     queryset = RestaurantLocation.objects.all()
 
     def get_context_data(self, **kwargs):
-        print(self.kwargs)
+        # print(self.kwargs)
         context = super(RestaurantDetailView, self).get_context_data(**kwargs)
-        print(context)
+        # print(context)
         return context
 
     # def get_object(self, *args, **kwargs):
@@ -219,12 +221,19 @@ class RestaurantDetailView(DetailView):
 
 
 # Better way than the above, by utilizing the ModelForm created in forms.py
+@login_required(login_url="/login/")
 def restaurant_createview(request):
     form = RestaurantLocationCreateForm(request.POST or None)
     errors = None
     if form.is_valid():
-        form.save()
-        return HttpResponseRedirect("/restaurants/")
+        if request.user.is_authenticated():
+            instance = form.save(commit=False)
+            instance.owner = request.user
+            instance.save()
+            # form.save()
+            return HttpResponseRedirect("/restaurants/")
+        else:
+            return HttpResponseRedirect("/login/")
     if form.errors:
         errors = form.errors
 
@@ -237,7 +246,22 @@ def restaurant_createview(request):
 
 
 # This is the BEST way, by using the CreateView
-class RestaurantCreateView(CreateView):
+class RestaurantCreateView(LoginRequiredMixin, CreateView):
     form_class = RestaurantLocationCreateForm
-    template_name = "restaurants/form.html"
-    success_url = "/restaurants/"
+    template_name = "form.html"
+    # success_url = "/restaurants/"     # already handled by get_absolute_url in models
+    # login_url = '/login/'
+
+    def form_valid(self, form):
+        if self.request.user.is_authenticated:
+            instance = form.save(commit=False)
+            instance.owner = self.request.user
+            # instance.save()
+            return super(RestaurantCreateView, self).form_valid(form)
+        # else:
+        #     return HttpResponseRedirect("/login/")
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(RestaurantCreateView, self).get_context_data(*args, **kwargs)
+        context['title'] = 'Add Restaurant'
+        return context
