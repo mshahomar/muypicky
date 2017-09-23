@@ -7,6 +7,6 @@ from .views import (ItemListView, ItemDetailView,
 urlpatterns = [
     url(r'^$', ItemListView.as_view(), name='menus_list'),
     url(r'^(?P<pk>\d+)/$', ItemDetailView.as_view(), name='menus_detail'),
+    url(r'^(?P<pk>\d+)/edit/$', ItemUpdateView.as_view(), name='menus_edit'),
     url(r'^create/$', ItemCreateView.as_view(), name='menus_create'),
-    url(r'^edit/(?P<pk>\d+)/$', ItemUpdateView.as_view(), name='menus_edit'),
 ]
