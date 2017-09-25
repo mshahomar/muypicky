@@ -27,5 +27,13 @@
             </li>
 
         {% endfor %}
+
+        <h4>
+            <a href="{% url 'menus:menus_create' %}">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+                Add New Menu
+            </a>
+        </h4>
+
     </ul>
 {% endblock %}

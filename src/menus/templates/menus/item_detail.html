@@ -3,9 +3,17 @@
 {% block title %}{{ block.super }} | Menu Item Detail{% endblock %}
 
 {% block content %}
-    <h1>{{ object.name }}</h1>
+    <h1>
+        {{ object.name }}
+        <small>
+            <a href="{% url 'menus:menus_edit' pk=object.pk %}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+        </small>
+    </h1>
     <p>Available at: <a href="{{ object.restaurant.get_absolute_url }}">{{ object.restaurant }}</a></p>
     <p>Contents: {{ object.contents }}</p>
+    <p>Contents: {{ object.excludes }}</p>
 {#    <p>{{ object.timestamp }}, Updated: {{ object.updated|timesince }} ago.</p>#}
 
 {#    <p>{{ object_list }}</p>#}
