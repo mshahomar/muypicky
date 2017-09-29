@@ -129,10 +129,10 @@ class RestaurantListView(LoginRequiredMixin, ListView):
     #     return queryset
 
 
-class MalaysianListView(ListView):
-    queryset = RestaurantLocation.objects.filter(category__iexact='Malaysian')
-    template_name = 'restaurants/restaurants_list.html'
-
+# class MalaysianListView(ListView):
+#     queryset = RestaurantLocation.objects.filter(category__iexact='Malaysian')
+#     template_name = 'restaurants/restaurants_list.html'
+#
 
 # class SearchRestaurantListView(ListView):
 #     template_name = 'restaurants/restaurants_list.html'

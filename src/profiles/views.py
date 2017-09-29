@@ -1,8 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import DetailView
+
+from menus.models import Item
+from restaurants.models import RestaurantLocation
 
 User = get_user_model()
 
@@ -12,8 +14,8 @@ class ProfileDetailView(DetailView):
     template_name = 'profiles/user.html'
 
     def get_object(self, queryset=None):
-        username = self.request.user
-        # username = self.kwargs.get('username')
+        # username = self.request.user
+        username = self.kwargs.get('username')
         # user = get_object_or_404(User, username__iexact=username)
         # print("Returned by get_object_or_404: ", user)
         if username is None:
@@ -23,5 +25,19 @@ class ProfileDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProfileDetailView, self).get_context_data(**kwargs)
-        print(context)
+        user = context['user']
+        query = self.request.GET.get('q')
+        # print("User:", user)
+        item_exists = Item.objects.filter(user=user).exists()
+
+        qs = RestaurantLocation.objects.filter(owner=user).search(query)
+        #
+        # if query:
+        #     qs = qs.search(query)
+        if qs.exists() and item_exists:
+            context['locations'] = qs
+        print("query:", qs)
+        print("item_exists:", item_exists)
+        print("Profiles Context Data:", context)
+        return context
 
