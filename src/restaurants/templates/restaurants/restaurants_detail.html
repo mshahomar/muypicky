@@ -3,7 +3,16 @@
 {% block title %}{{ block.super }} | Restaurants Detail{% endblock %}
 
 {% block content %}
-    <h1>{{ object.title }} <small>[{{ object.category }}]</small></h1>
+    <h1>
+        {{ object.title }}
+        <small>[{{ object.category }}]
+        {% if user.is_authenticated %}
+            <a href="{% url 'restaurants:restaurants_edit' slug=object.slug %}">
+                <span class="glyphicon glyphicon-edit"></span>
+            </a>
+        {% endif %}
+        </small>
+    </h1>
     <p>Location: {{ object.location }}</p>
     <p>{{ object.timestamp }}, Updated: {{ object.updated|timesince }} ago.</p>
 

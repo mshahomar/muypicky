@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ block.super }} | User Profile: {{ user.username }} {% endblock %}
+
+{% block content %}
+    <h1>
+        {{ user.username|upper }} Profile
+    </h1>
+    <hr>
+{#    <p>{{ user.restaurantlocation_set.all }}</p>#}
+{#    <p>{{ user.item_set.all }}</p>#}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6"><h4>My Registered restaurants</h4></div>
+            <div class="col-md-6 pull-right">
+                <form class="form" method="GET" action=".">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search for..." name="q" value="{{ request.GET.q }}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" style="padding-top: 10px">
+            {% if locations %}
+                {% for restaurant in locations %}
+                    <div class="panel-group profile-panels" id="accordion" style="padding: 0px 15px">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{ forloop.counter }}">
+                                        {{ restaurant.title }}
+        {#                                <strong><a href="{% url 'restaurants:restaurants_detail' slug=restaurant.slug %}">{{ restaurant.title }}</a></strong>#}
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapse{{ forloop.counter }}" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    Category: <a href="{{ request.path }}?q={{ restaurant.category }}">{{ restaurant.category }}</a><br>
+                                    Location: {{ restaurant.location }}
+                                    <br>Menus:
+                                    <ul>
+                                        {% for item in restaurant.item_set.all %}
+                                            <li style="margin-bottom: 10px">
+                                                <b><i><a href="{% url 'menus:menus_detail' pk=item.pk %}">{{ item.name }}</a></i></b><br>
+                                                {% for ingredient in item.get_contents %}
+                                                    <span class="label label-warning"><a href="{{ request.path }}?q={{ ingredient }}">{{ ingredient }}</a></span>
+                                                {% endfor %}
+                                            </li>
+                                        {% empty %}
+                                            <i>No menus available.</i>
+                                        {% endfor %}
+                                    </ul>
+                                    <i><a href="{% url 'restaurants:restaurants_detail' slug=restaurant.slug %}">Click here </a>for more info or to edit this restaurant</i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="panel-group profile-panels">
+                    <p class="lead" style="padding: 10px 15px 5px">No Items Found!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

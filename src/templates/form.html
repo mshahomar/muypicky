@@ -13,7 +13,11 @@
 {#        <input type="text" name="location" placeholder="Location"><br>#}
 {#        <input type="text" name="category" placeholder="Category"><br>#}
         {{ form.as_p }}
-        <button type="submit">Save</button>
+        <button type="submit" class="btn btn-primary">Save</button>
     </form>
 {#    <p>{{ object_list }}</p>#}
+    {% if form.instance %}
+        <h2>{{ form.instance.name }}</h2>
+    {% endif %}
+
 {% endblock %}

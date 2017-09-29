@@ -1,0 +1,5 @@
+# ignoring all local settings file
+muypicky/old_settings.py
+muypicky/settings/base.py
+muypicky/settings/local.py
+debug.log

@@ -3,13 +3,21 @@
 {% block title %}{{ block.super }} | Restaurants List{% endblock %}
 
 {% block content %}
-    <h1>RESTAURANTS LIST</h1>
+    <h1>My Restaurants</h1>
     <ul>
         {% for obj in object_list %}
-            <li><a href="{% url 'restaurants_detail' slug=obj.slug %}">{{ obj.name }}</a> [{{ obj.category }}]; Located at: {{ obj.location }}</li>
+            <li><a href="{% url 'restaurants:restaurants_detail' slug=obj.slug %}">{{ obj.name }}</a> [{{ obj.category }}]; Located at: {{ obj.location }}</li>
 {#            <li>{{ obj.name }} [{{ obj.category }}]; Located at: {{ obj.location }}</li>#}
             <em>Entry Updated: {{ obj.updated }}</em>
         {% endfor %}
+
+        <h4>
+            <a href="{% url 'restaurants:create' %}">
+                <span class="glyphicon glyphicon-plus-sign"></span>
+                Add New Restaurant
+            </a>
+        </h4>
     </ul>
+
 {#    <p>{{ object_list }}</p>#}
 {% endblock %}

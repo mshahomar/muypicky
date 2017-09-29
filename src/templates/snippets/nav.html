@@ -15,8 +15,38 @@
                 <li><a href="{% url 'home' %}">HOME</a></li>
                 <li><a href="{% url 'about' %}">ABOUT</a></li>
                 <li><a href="{% url 'contact' %}">CONTACT</a></li>
-                <li><a href="{% url 'restaurants_list' %}">RESTAURANTS</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        RESTAURANTS & MENUS
+                        <span class="caret"></span>
+                    </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'restaurants:restaurants_list' %}">List of Restaurants</a></li>
+                            {% if request.user.is_authenticated %}<li><a href="{% url 'restaurants:create' %}">Create Restaurant</a></li>{% endif %}
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'menus:menus_list' %}">List of Menus</a></li>
+                            {% if request.user.is_authenticated %}<li><a href="{% url 'menus:menus_create' %}">Create Menu</a></li>{% endif %}
+                        </ul>
+                </li>
+                {% if not request.user.is_authenticated %}<li>
+                    <a href="{% url 'login' %}">LOGIN</a></li>
+                {% else %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+{#                            {{ user.username }} logged on.#}
+                            <span class="glyphicon glyphicon-user"></span>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'profile:detail' username=user.username %}">{{ user.username|upper }}</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'logout' %}">LOGOUT</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
 </nav>
+
+<>
